@@ -1,8 +1,13 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/gin-gonic/gin"
+)
 
 func main() {
-	fmt.Println("Tournify Begins")
-
+	router := gin.Default()
+	fmt.Println("Server running on port 8000")
+	router.Run(":8000")
 }
