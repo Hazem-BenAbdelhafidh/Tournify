@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/Hazem-BenAbdelhafidh/Tournify/internal/tournament"
+	"github.com/Hazem-BenAbdelhafidh/Tournify/internal/user"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -16,12 +17,13 @@ func ConnectToDb() *gorm.DB {
 	} else {
 		dsn = "host=localhost user=hazem password=test123 dbname=tournify port=5432 sslmode=disable"
 	}
+
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
 	}
 
-	err = db.AutoMigrate(&tournament.Tournament{})
+	err = db.AutoMigrate(&user.User{}, &tournament.Tournament{})
 	if err != nil {
 		fmt.Println("error while migrating : ", err.Error())
 	}
