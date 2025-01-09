@@ -1,13 +1,15 @@
 package tournament
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+)
 
 type TournamentRepository interface {
-	Create(payload CreateTournament) (*Tournament, error)
-	Update(id int, payload CreateTournament) error
-	Delete(id int) error
-	GetById(id int) (Tournament, error)
-	GetAll() ([]Tournament, error)
+	CreateTournament(payload CreateTournament) (Tournament, error)
+	UpdateTournament(id int, payload CreateTournament) error
+	DeleteTournament(id int) error
+	GetTournamentById(id int) (Tournament, error)
+	GetTournaments(limit, offset int) ([]Tournament, error)
 }
 
 type TournamentRepo struct {
@@ -21,7 +23,7 @@ func NewTournamentRepo(DB *gorm.DB) *TournamentRepo {
 
 }
 
-func (tr TournamentRepo) GetById(id int) (Tournament, error) {
+func (tr TournamentRepo) GetTournamentById(id int) (Tournament, error) {
 	var tournament Tournament
 
 	err := tr.DB.First(&tournament, id).Error
@@ -32,7 +34,7 @@ func (tr TournamentRepo) GetById(id int) (Tournament, error) {
 	return tournament, nil
 }
 
-func (tr TournamentRepo) GetAll(limit, offset int) ([]Tournament, error) {
+func (tr TournamentRepo) GetTournaments(limit, offset int) ([]Tournament, error) {
 	var tournaments []Tournament
 
 	err := tr.DB.Find(&tournaments).Limit(limit).Offset(offset).Error
@@ -43,7 +45,7 @@ func (tr TournamentRepo) GetAll(limit, offset int) ([]Tournament, error) {
 	return tournaments, nil
 }
 
-func (tr TournamentRepo) Create(payload CreateTournament) (Tournament, error) {
+func (tr TournamentRepo) CreateTournament(payload CreateTournament) (Tournament, error) {
 	tournament := Tournament{
 		Name:        payload.Name,
 		Description: payload.Description,
@@ -61,7 +63,7 @@ func (tr TournamentRepo) Create(payload CreateTournament) (Tournament, error) {
 	return tournament, nil
 }
 
-func (tr TournamentRepo) Update(id int, payload CreateTournament) error {
+func (tr TournamentRepo) UpdateTournament(id int, payload CreateTournament) error {
 	tournament := Tournament{
 		ID:          uint(id),
 		Name:        payload.Name,
@@ -81,7 +83,7 @@ func (tr TournamentRepo) Update(id int, payload CreateTournament) error {
 
 }
 
-func (tr TournamentRepo) Delete(id int) error {
+func (tr TournamentRepo) DeleteTournament(id int) error {
 	err := tr.DB.Delete(&Tournament{}, id).Error
 	if err != nil {
 		return err
