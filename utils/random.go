@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/Hazem-BenAbdelhafidh/Tournify/internal/tournament"
+	"github.com/Hazem-BenAbdelhafidh/Tournify/internal/user"
 	"github.com/stretchr/testify/require"
 )
 
@@ -56,4 +57,24 @@ func CreateRandomTournament(t *testing.T, repo *tournament.TournamentRepo) tourn
 
 	return createdTournament
 
+}
+
+func CreateRandomUser(t *testing.T, repo *user.UserRepo) user.User {
+	username := RandomString(7)
+	email := RandomString(15)
+	password := RandomString(9)
+	user := user.CreateUser{
+		Username: username,
+		Email:    email,
+		Password: password,
+	}
+
+	createdUser, err := repo.CreateUser(user)
+	require.NoError(t, err)
+	require.NotEmpty(t, createdUser)
+	require.NotZero(t, createdUser.ID)
+	require.Equal(t, user.Username, createdUser.Username)
+	require.Equal(t, user.Email, createdUser.Email)
+
+	return createdUser
 }
