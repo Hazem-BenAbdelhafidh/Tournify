@@ -3,10 +3,10 @@ package db
 import (
 	"fmt"
 	"os"
-	"os/user"
 	"testing"
 
 	"github.com/Hazem-BenAbdelhafidh/Tournify/internal/tournament"
+	"github.com/Hazem-BenAbdelhafidh/Tournify/internal/user"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -15,10 +15,11 @@ func ConnectToDb() *gorm.DB {
 	var dsn, dbUser, password, port, database string
 
 	if testing.Testing() {
-		dbUser = os.Getenv("TEST_DB_USERNAME")
-		password = os.Getenv("TEST_DB_PASSWORD")
-		port = os.Getenv("TEST_DB_PORT")
-		database = os.Getenv("TEST_DB_DATABASE")
+		dbUser = "hazem2"
+		password = "test1234"
+		port = "5433"
+		database = "tournify_test"
+		fmt.Println(dbUser, password, port, database)
 
 		dsn = fmt.Sprintf("host=localhost user=%s password=%s dbname=%s port=%s sslmode=disable", dbUser, password, database, port)
 	} else {
@@ -26,6 +27,7 @@ func ConnectToDb() *gorm.DB {
 		password = os.Getenv("DB_PASSWORD")
 		port = os.Getenv("DB_PORT")
 		database = os.Getenv("DB_DATABASE")
+		fmt.Println(dbUser, password, port, database)
 		dsn = fmt.Sprintf("host=localhost user=%s password=%s dbname=%s port=%s sslmode=disable", dbUser, password, database, port)
 	}
 
