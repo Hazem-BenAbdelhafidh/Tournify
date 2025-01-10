@@ -70,7 +70,7 @@ func (uh *UserHandler) GetUsers(c *gin.Context) {
 func (uh *UserHandler) Signup(c *gin.Context) {
 	var userToCreate user.CreateUser
 
-	err := c.BindJSON(&userToCreate)
+	err := c.ShouldBindJSON(&userToCreate)
 	if err != nil {
 		respondWithError(c, http.StatusBadRequest, err)
 		return
@@ -92,7 +92,7 @@ func (uh *UserHandler) Signup(c *gin.Context) {
 func (uh *UserHandler) Login(c *gin.Context) {
 	var credentials user.LoginUser
 
-	err := c.BindJSON(&credentials)
+	err := c.ShouldBindJSON(&credentials)
 	if err != nil {
 		respondWithError(c, http.StatusBadRequest, err)
 		return
@@ -109,7 +109,7 @@ func (uh *UserHandler) Login(c *gin.Context) {
 
 	c.SetCookie("token", token, 3600, "/", "localhost", false, true)
 
-	respondWithJson(c, http.StatusCreated, map[string]string{
+	respondWithJson(c, http.StatusOK, map[string]string{
 		"token": token,
 	})
 }
@@ -123,7 +123,7 @@ func (uh *UserHandler) UpdateUser(c *gin.Context) {
 		respondWithError(c, http.StatusBadRequest, err)
 		return
 	}
-	err = c.BindJSON(&updatePayload)
+	err = c.ShouldBindJSON(&updatePayload)
 	if err != nil {
 		respondWithError(c, http.StatusBadRequest, err)
 		return
@@ -154,4 +154,23 @@ func (uh *UserHandler) DeleteUser(c *gin.Context) {
 	}
 
 	respondWithJson(c, http.StatusOK, nil)
+}
+
+func (uh *UserHandler) GetMyInfo(c *gin.Context) {
+	userId, exists := c.Get("userId")
+	if !exists {
+		respondWithError(c, http.StatusUnauthorized, errors.New("No user id found"))
+		return
+	}
+
+	floatUserId := userId.(float64)
+	intUserId := int(floatUserId)
+
+	user, err := uh.UserService.GetUserById(intUserId)
+	if err != nil {
+		respondWithError(c, http.StatusInternalServerError, err)
+		return
+	}
+
+	respondWithJson(c, http.StatusOK, user)
 }
