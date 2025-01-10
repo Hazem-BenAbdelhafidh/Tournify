@@ -4,7 +4,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type TournamentRepository interface {
+type ITournamentRepository interface {
 	CreateTournament(payload CreateTournament) (Tournament, error)
 	UpdateTournament(id int, payload CreateTournament) error
 	DeleteTournament(id int) error
