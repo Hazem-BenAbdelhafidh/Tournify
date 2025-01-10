@@ -2,6 +2,7 @@ package user
 
 import (
 	"errors"
+	"os"
 
 	"github.com/golang-jwt/jwt"
 	"golang.org/x/crypto/bcrypt"
@@ -30,8 +31,9 @@ func signToken(userId uint) (string, error) {
 	claims := jwt.MapClaims{
 		"userId": userId,
 	}
+	key := os.Getenv("JWT_SECRET")
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	str, err := token.SignedString([]byte("secret"))
+	str, err := token.SignedString([]byte(key))
 	if err != nil {
 		return "", err
 	}

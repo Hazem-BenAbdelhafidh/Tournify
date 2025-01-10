@@ -2,20 +2,31 @@ package db
 
 import (
 	"fmt"
+	"os"
+	"os/user"
 	"testing"
 
 	"github.com/Hazem-BenAbdelhafidh/Tournify/internal/tournament"
-	"github.com/Hazem-BenAbdelhafidh/Tournify/internal/user"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 func ConnectToDb() *gorm.DB {
-	var dsn string
+	var dsn, dbUser, password, port, database string
+
 	if testing.Testing() {
-		dsn = "host=localhost user=hazem2 password=test1234 dbname=tournify_test port=5433 sslmode=disable"
+		dbUser = os.Getenv("TEST_DB_USERNAME")
+		password = os.Getenv("TEST_DB_PASSWORD")
+		port = os.Getenv("TEST_DB_PORT")
+		database = os.Getenv("TEST_DB_DATABASE")
+
+		dsn = fmt.Sprintf("host=localhost user=%s password=%s dbname=%s port=%s sslmode=disable", dbUser, password, database, port)
 	} else {
-		dsn = "host=localhost user=hazem password=test123 dbname=tournify port=5432 sslmode=disable"
+		dbUser = os.Getenv("DB_USERNAME")
+		password = os.Getenv("DB_PASSWORD")
+		port = os.Getenv("DB_PORT")
+		database = os.Getenv("DB_DATABASE")
+		dsn = fmt.Sprintf("host=localhost user=%s password=%s dbname=%s port=%s sslmode=disable", dbUser, password, database, port)
 	}
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
