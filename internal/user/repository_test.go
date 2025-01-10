@@ -11,7 +11,8 @@ import (
 
 type UserSuite struct {
 	suite.Suite
-	repo *user.UserRepo
+	repo    *user.UserRepo
+	service *user.UserService
 }
 
 func TestUserSuite(t *testing.T) {
@@ -22,6 +23,7 @@ func (us *UserSuite) SetupSuite() {
 	db := db.ConnectToDb()
 	repo := user.NewUserRepo(db)
 	us.repo = repo
+	us.service = user.NewUserService(repo)
 	err := us.repo.DB.Exec("DELETE FROM users").Error
 	us.Require().NoError(err)
 }
@@ -43,7 +45,17 @@ func (us *UserSuite) TestGetUserById() {
 	us.Require().Equal(createdUser.ID, user.ID)
 	us.Require().Equal(createdUser.Username, user.Username)
 	us.Require().Equal(createdUser.Email, user.Email)
+}
 
+func (us *UserSuite) TestGetUserByEmail() {
+	createdUser := utils.CreateRandomUser(us.T(), us.repo)
+
+	user, err := us.repo.GetUserByEmail(createdUser.Email)
+	us.Require().NoError(err)
+	us.Require().NotEmpty(user)
+	us.Require().Equal(createdUser.ID, user.ID)
+	us.Require().Equal(createdUser.Username, user.Username)
+	us.Require().Equal(createdUser.Email, user.Email)
 }
 
 func (us *UserSuite) TestGetUsers() {
@@ -61,7 +73,7 @@ func (us *UserSuite) TestGetUsers() {
 
 func (us *UserSuite) TestDeleteUser() {
 	createdUser := utils.CreateRandomUser(us.T(), us.repo)
-	err := us.repo.DeleteTournament(int(createdUser.ID))
+	err := us.repo.DeleteUser(int(createdUser.ID))
 	us.Require().NoError(err)
 	tournament, err := us.repo.GetUserById(int(createdUser.ID))
 	us.Require().NoError(err)

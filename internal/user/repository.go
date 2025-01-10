@@ -4,11 +4,12 @@ import (
 	"gorm.io/gorm"
 )
 
-type UserRepository interface {
+type IUserRepository interface {
 	CreateUser(payload CreateUser) (User, error)
 	UpdateUser(id int, payload CreateUser) error
 	DeleteUser(id int) error
 	GetUserById(id int) (User, error)
+	GetUserByEmail(email string) (User, error)
 	GetUsers(limit, offset int, searchWord string) ([]User, error)
 }
 
@@ -32,6 +33,17 @@ func (ur UserRepo) GetUserById(id int) (User, error) {
 	}
 
 	return user, nil
+}
+
+func (ur UserRepo) GetUserByEmail(email string) (User, error) {
+	var user User
+	err := ur.DB.First(&user, "email = ?", email).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return User{}, err
+	}
+
+	return user, nil
+
 }
 
 func (ur UserRepo) GetUsers(limit, offset int, searchWord string) ([]User, error) {
@@ -82,7 +94,7 @@ func (ur UserRepo) UpdateUser(id int, payload CreateUser) error {
 
 }
 
-func (ur UserRepo) DeleteTournament(id int) error {
+func (ur UserRepo) DeleteUser(id int) error {
 	err := ur.DB.Delete(&User{}, id).Error
 	if err != nil {
 		return err

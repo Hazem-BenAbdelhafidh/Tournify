@@ -1,6 +1,6 @@
 package tournament
 
-type TournamentService interface {
+type ITournamentService interface {
 	CreateTournament(payload CreateTournament) (Tournament, error)
 	UpdateTournament(id int, payload CreateTournament) error
 	DeleteTournament(id int) error
@@ -8,32 +8,32 @@ type TournamentService interface {
 	GetTournaments(limit, offset int) ([]Tournament, error)
 }
 
-type TournamentServ struct {
+type TournamentService struct {
 	repo TournamentRepository
 }
 
-func NewTournamentService(repo TournamentRepository) *TournamentServ {
-	return &TournamentServ{
+func NewTournamentService(repo TournamentRepository) *TournamentService {
+	return &TournamentService{
 		repo: repo,
 	}
 }
 
-func (ts *TournamentServ) CreateTournament(payload CreateTournament) (Tournament, error) {
+func (ts *TournamentService) CreateTournament(payload CreateTournament) (Tournament, error) {
 	return ts.repo.CreateTournament(payload)
 }
 
-func (ts *TournamentServ) GetTournamentById(id int) (Tournament, error) {
+func (ts *TournamentService) GetTournamentById(id int) (Tournament, error) {
 	return ts.repo.GetTournamentById(id)
 }
 
-func (ts *TournamentServ) GetTournaments(limit, offset int) ([]Tournament, error) {
+func (ts *TournamentService) GetTournaments(limit, offset int) ([]Tournament, error) {
 	return ts.repo.GetTournaments(limit, offset)
 }
 
-func (ts *TournamentServ) DeleteTournament(id int) error {
+func (ts *TournamentService) DeleteTournament(id int) error {
 	return ts.repo.DeleteTournament(id)
 }
 
-func (ts *TournamentServ) UpdateTournament(id int, payload CreateTournament) error {
+func (ts *TournamentService) UpdateTournament(id int, payload CreateTournament) error {
 	return ts.repo.DeleteTournament(id)
 }
