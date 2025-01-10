@@ -9,10 +9,10 @@ import (
 )
 
 type TournamentHandler struct {
-	TournamentService tournament.TournamentService
+	TournamentService tournament.ITournamentService
 }
 
-func NewTournamentHandler(ts tournament.TournamentService) *TournamentHandler {
+func NewTournamentHandler(ts *tournament.TournamentService) *TournamentHandler {
 	return &TournamentHandler{
 		TournamentService: ts,
 	}
