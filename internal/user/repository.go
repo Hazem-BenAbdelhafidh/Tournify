@@ -6,7 +6,7 @@ import (
 
 type IUserRepository interface {
 	CreateUser(payload CreateUser) (User, error)
-	UpdateUser(id int, payload CreateUser) error
+	UpdateUser(id int, payload UpdateUser) error
 	DeleteUser(id int) error
 	GetUserById(id int) (User, error)
 	GetUserByEmail(email string) (User, error)
@@ -77,12 +77,11 @@ func (ur UserRepo) CreateUser(payload CreateUser) (User, error) {
 	return user, nil
 }
 
-func (ur UserRepo) UpdateUser(id int, payload CreateUser) error {
+func (ur UserRepo) UpdateUser(id int, payload UpdateUser) error {
 	user := User{
 		ID:       uint(id),
 		Username: payload.Username,
 		Email:    payload.Email,
-		Password: payload.Password,
 	}
 
 	err := ur.DB.Save(&user).Error

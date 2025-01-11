@@ -115,7 +115,7 @@ func (uh *UserHandler) Login(c *gin.Context) {
 }
 
 func (uh *UserHandler) UpdateUser(c *gin.Context) {
-	var updatePayload user.CreateUser
+	var updatePayload user.UpdateUser
 	id := c.Param("id")
 
 	intId, err := strconv.Atoi(id)

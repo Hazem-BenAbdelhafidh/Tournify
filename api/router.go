@@ -52,8 +52,8 @@ func SetupRouter() *gin.Engine {
 	{
 		userRouter.POST("/signup", userHandler.Signup)
 		userRouter.POST("/login", userHandler.Login)
-		userRouter.GET("")
-		userRouter.GET("/:id")
+		userRouter.GET("", userHandler.GetUsers)
+		userRouter.GET("/:id", userHandler.GetUserById)
 		userRouter.Use(AuthMiddleware)
 		userRouter.DELETE("/:id")
 		userRouter.PATCH("/:id")

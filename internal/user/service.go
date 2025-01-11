@@ -12,7 +12,7 @@ type IUserService interface {
 	Login(payload LoginUser) (string, error)
 	Signup(payload CreateUser) (SignupResponse, error)
 	DeleteUser(id int) error
-	UpdateUser(id int, payload CreateUser) error
+	UpdateUser(id int, payload UpdateUser) error
 	GetUserById(id int) (User, error)
 	GetUsers(limit, offset int, searchWord string) ([]User, error)
 }
@@ -118,6 +118,6 @@ func (us *UserService) DeleteUser(id int) error {
 	return us.repo.DeleteUser(id)
 }
 
-func (us *UserService) UpdateUser(id int, payload CreateUser) error {
+func (us *UserService) UpdateUser(id int, payload UpdateUser) error {
 	return us.repo.UpdateUser(id, payload)
 }
