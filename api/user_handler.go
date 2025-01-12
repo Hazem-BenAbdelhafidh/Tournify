@@ -21,6 +21,14 @@ func NewUserHandler(us *user.UserService) *UserHandler {
 
 }
 
+// GetUserById	godoc
+// @Summary	gets a single user
+// @Description This endpoint is used to get a single user by id
+// @Param id path int true "User ID"
+// @Produce application/json
+// @Success 200 {object} ResponseBody{}
+// @Tags user
+// @Router /user/{id} [get]
 func (uh *UserHandler) GetUserById(c *gin.Context) {
 	id := c.Param("id")
 
@@ -39,6 +47,16 @@ func (uh *UserHandler) GetUserById(c *gin.Context) {
 	respondWithJson(c, http.StatusOK, user)
 }
 
+// GetUsers	godoc
+// @Summary	gets users
+// @Description This endpoint is used to get users with pagination and search
+// @Produce application/json
+// @Param limit query int false "Limit"
+// @Param offset query int false "Offset"
+// @Param search query string false "Search"
+// @Success 200 {object} ResponseBody{}
+// @Tags user
+// @Router /user [get]
 func (uh *UserHandler) GetUsers(c *gin.Context) {
 	var limit int
 	var page int
@@ -58,15 +76,23 @@ func (uh *UserHandler) GetUsers(c *gin.Context) {
 
 	offset := (limit * page) - 1
 
-	tournaments, err := uh.UserService.GetUsers(limit, offset, searchWord)
+	users, err := uh.UserService.GetUsers(limit, offset, searchWord)
 	if err != nil {
 		respondWithError(c, http.StatusInternalServerError, err)
 		return
 	}
 
-	respondWithJson(c, http.StatusOK, tournaments)
+	respondWithJson(c, http.StatusOK, users)
 }
 
+// Signup	godoc
+// @Summary	signup
+// @Description This endpoint is used to signup a new user using the username, email and password
+// @Param CreatePayload body user.CreateUser true "User"
+// @Produce application/json
+// @Success 201 {object} ResponseBody{}
+// @Tags user
+// @Router /user/{id} [get]
 func (uh *UserHandler) Signup(c *gin.Context) {
 	var userToCreate user.CreateUser
 
@@ -89,6 +115,14 @@ func (uh *UserHandler) Signup(c *gin.Context) {
 	})
 }
 
+// Login	godoc
+// @Summary	Login to an existent account
+// @Description This endpoint is used to login to an existent account using the email and password
+// @Produce application/json
+// @Param LoginPayload body user.LoginUser true "User"
+// @Success 200 {object} ResponseBody{}
+// @Tags user
+// @Router /user/login [post]
 func (uh *UserHandler) Login(c *gin.Context) {
 	var credentials user.LoginUser
 
@@ -114,6 +148,15 @@ func (uh *UserHandler) Login(c *gin.Context) {
 	})
 }
 
+// UpdateUser	godoc
+// @Summary	update user
+// @Description This endpoint is used to update existing user
+// @Produce application/json
+// @Success 200 {object} ResponseBody{}
+// @Param id path int true "User ID"
+// @Param UpdatePayload body user.UpdateUser true "User"
+// @Tags user
+// @Router /user/{id} [patch]
 func (uh *UserHandler) UpdateUser(c *gin.Context) {
 	var updatePayload user.UpdateUser
 	id := c.Param("id")
@@ -138,6 +181,14 @@ func (uh *UserHandler) UpdateUser(c *gin.Context) {
 	respondWithJson(c, http.StatusOK, nil)
 }
 
+// DeleteUser	godoc
+// @Summary	delete user
+// @Description This endpoint is used to delete existing user
+// @Produce application/json
+// @Success 200 {object} ResponseBody{}
+// @Param id path int true "User ID"
+// @Tags user
+// @Router /user/{id} [delete]
 func (uh *UserHandler) DeleteUser(c *gin.Context) {
 	id := c.Param("id")
 
@@ -156,6 +207,13 @@ func (uh *UserHandler) DeleteUser(c *gin.Context) {
 	respondWithJson(c, http.StatusOK, nil)
 }
 
+// GetMyInfo	godoc
+// @Summary	gets the user info
+// @Description This endpoint is used to get the current logged in user info
+// @Produce application/json
+// @Success 200 {object} ResponseBody{}
+// @Tags user
+// @Router /user/me [get]
 func (uh *UserHandler) GetMyInfo(c *gin.Context) {
 	userId, exists := c.Get("userId")
 	if !exists {
