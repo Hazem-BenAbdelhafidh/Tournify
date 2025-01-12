@@ -1,0 +1,289 @@
+definitions:
+  api.ResponseBody:
+    properties:
+      data: {}
+      message:
+        type: string
+    type: object
+  tournament.CreateTournament:
+    properties:
+      description:
+        type: string
+      endDate:
+        type: string
+      game:
+        type: string
+      name:
+        type: string
+      numOfTeams:
+        minimum: 2
+        type: integer
+      startDate:
+        type: string
+    required:
+    - endDate
+    - game
+    - name
+    - numOfTeams
+    - startDate
+    type: object
+  user.CreateUser:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - email
+    - password
+    - username
+    type: object
+  user.LoginUser:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  user.UpdateUser:
+    properties:
+      email:
+        type: string
+      username:
+        type: string
+    type: object
+info:
+  contact: {}
+  title: Tournify REST API
+paths:
+  /tournament:
+    get:
+      description: This endpoint is used to get tournaments with pagination
+      parameters:
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.ResponseBody'
+      summary: Gets tournaments
+      tags:
+      - tournament
+    post:
+      description: This endpoint is used to create a new tournament
+      parameters:
+      - description: Tournament
+        in: body
+        name: CreatePayload
+        required: true
+        schema:
+          $ref: '#/definitions/tournament.CreateTournament'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/api.ResponseBody'
+      summary: Create tournament
+      tags:
+      - tournament
+  /tournament/{id}:
+    delete:
+      description: This endpoint is used to delete a tournament
+      parameters:
+      - description: id of a tournament
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.ResponseBody'
+      summary: Deletes tournament
+      tags:
+      - tournament
+    get:
+      description: This endpoint is used to get a single tournament by id
+      parameters:
+      - description: id of a tournament
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.ResponseBody'
+      summary: Gets tournament by id
+      tags:
+      - tournament
+    patch:
+      description: This endpoint is used to update a tournament
+      parameters:
+      - description: id of a tournament
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update Tournament Payload
+        in: body
+        name: UpdateTournament
+        required: true
+        schema:
+          $ref: '#/definitions/tournament.CreateTournament'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.ResponseBody'
+      summary: Update tournament
+      tags:
+      - tournament
+  /user:
+    get:
+      description: This endpoint is used to get users with pagination and search
+      parameters:
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      - description: Search
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.ResponseBody'
+      summary: gets users
+      tags:
+      - user
+  /user/{id}:
+    delete:
+      description: This endpoint is used to delete existing user
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.ResponseBody'
+      summary: delete user
+      tags:
+      - user
+    get:
+      description: This endpoint is used to signup a new user using the username,
+        email and password
+      parameters:
+      - description: User
+        in: body
+        name: CreatePayload
+        required: true
+        schema:
+          $ref: '#/definitions/user.CreateUser'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/api.ResponseBody'
+      summary: signup
+      tags:
+      - user
+    patch:
+      description: This endpoint is used to update existing user
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: User
+        in: body
+        name: UpdatePayload
+        required: true
+        schema:
+          $ref: '#/definitions/user.UpdateUser'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.ResponseBody'
+      summary: update user
+      tags:
+      - user
+  /user/login:
+    post:
+      description: This endpoint is used to login to an existent account using the
+        email and password
+      parameters:
+      - description: User
+        in: body
+        name: LoginPayload
+        required: true
+        schema:
+          $ref: '#/definitions/user.LoginUser'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.ResponseBody'
+      summary: Login to an existent account
+      tags:
+      - user
+  /user/me:
+    get:
+      description: This endpoint is used to get the current logged in user info
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.ResponseBody'
+      summary: gets the user info
+      tags:
+      - user
+swagger: "2.0"

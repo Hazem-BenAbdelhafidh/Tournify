@@ -82,7 +82,7 @@ func (us *UserSuite) TestDeleteUser() {
 
 func (us *UserSuite) TestUpdateUser() {
 	createdUser := utils.CreateRandomUser(us.T(), us.repo)
-	updatePayload := user.CreateUser{
+	updatePayload := user.UpdateUser{
 		Username: "new user name",
 		Email:    "email2@yahoo.com",
 	}

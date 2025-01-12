@@ -4,6 +4,9 @@ import (
 	"encoding/json"
 	"io"
 
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+
 	"github.com/Hazem-BenAbdelhafidh/Tournify/db"
 	"github.com/Hazem-BenAbdelhafidh/Tournify/internal/tournament"
 	"github.com/Hazem-BenAbdelhafidh/Tournify/internal/user"
@@ -31,8 +34,11 @@ func SetupRouter() *gin.Engine {
 		v.RegisterValidation("even", tournament.IsEven)
 	}
 
+	// Swagger
+	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
 	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:5173"}, // Add your frontend URL
+		AllowOrigins:     []string{"*"}, // Add your frontend URL
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"},
 		AllowHeaders:     []string{"Accept", "Authorization", "Content-Type"},
 		AllowCredentials: true, // Enable cookies/auth
