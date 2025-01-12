@@ -19,6 +19,14 @@ func NewTournamentHandler(ts *tournament.TournamentService) *TournamentHandler {
 
 }
 
+// GetTournamentById	godoc
+// @Summary	Gets tournament by id
+// @Description This endpoint is used to get a single tournament by id
+// @Produce application/json
+// @Success 200 {object} ResponseBody{}
+// @Param id path int true "id of a tournament"
+// @Tags tournament
+// @Router /tournament/{id} [get]
 func (th *TournamentHandler) GetTournamentById(c *gin.Context) {
 	id := c.Param("id")
 
@@ -37,6 +45,15 @@ func (th *TournamentHandler) GetTournamentById(c *gin.Context) {
 	respondWithJson(c, http.StatusOK, tournament)
 }
 
+// GetTournaments	godoc
+// @Summary	Gets tournaments
+// @Description This endpoint is used to get tournaments with pagination
+// @Produce application/json
+// @Success 200 {object} ResponseBody{}
+// @Param limit query int false "Limit"
+// @Param offset query int false "offset"
+// @Tags tournament
+// @Router /tournament [get]
 func (th *TournamentHandler) GetTournaments(c *gin.Context) {
 	var limit int
 	var page int
@@ -62,6 +79,14 @@ func (th *TournamentHandler) GetTournaments(c *gin.Context) {
 	respondWithJson(c, http.StatusOK, tournaments)
 }
 
+// CreaeteTournament	godoc
+// @Summary	Create tournament
+// @Description This endpoint is used to create a new tournament
+// @Produce application/json
+// @Success 201 {object} ResponseBody{}
+// @Param CreatePayload body tournament.CreateTournament true "Tournament"
+// @Tags tournament
+// @Router /tournament [post]
 func (th *TournamentHandler) CreateTournament(c *gin.Context) {
 	var tournamentToCreate tournament.CreateTournament
 
@@ -80,6 +105,15 @@ func (th *TournamentHandler) CreateTournament(c *gin.Context) {
 	respondWithJson(c, http.StatusCreated, createdTournament)
 }
 
+// UpdateTournament	godoc
+// @Summary	Update tournament
+// @Description This endpoint is used to update a tournament
+// @Produce application/json
+// @Success 200 {object} ResponseBody{}
+// @Param id path int true "id of a tournament"
+// @Param UpdateTournament body tournament.CreateTournament true "Update Tournament Payload"
+// @Tags tournament
+// @Router /tournament/{id} [patch]
 func (th *TournamentHandler) UpdateTournament(c *gin.Context) {
 	var updatePayload tournament.CreateTournament
 	id := c.Param("id")
@@ -104,6 +138,14 @@ func (th *TournamentHandler) UpdateTournament(c *gin.Context) {
 	respondWithJson(c, http.StatusOK, nil)
 }
 
+// DeleteTournament	godoc
+// @Summary	Deletes tournament
+// @Description This endpoint is used to delete a tournament
+// @Produce application/json
+// @Success 200 {object} ResponseBody{}
+// @Param id path int true "id of a tournament"
+// @Tags tournament
+// @Router /tournament/{id} [delete]
 func (th *TournamentHandler) DeleteTournament(c *gin.Context) {
 	id := c.Param("id")
 
