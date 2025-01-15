@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/Hazem-BenAbdelhafidh/Tournify/db"
+	"github.com/Hazem-BenAbdelhafidh/Tournify/entities"
 	"github.com/Hazem-BenAbdelhafidh/Tournify/internal/tournament"
 	"github.com/Hazem-BenAbdelhafidh/Tournify/utils"
 	"github.com/stretchr/testify/suite"
@@ -52,7 +53,7 @@ func (ts *TournamentSuite) TestGetTournamentById() {
 }
 
 func (ts *TournamentSuite) TestGetTournaments() {
-	createdTournaments := []tournament.Tournament{}
+	createdTournaments := []entities.Tournament{}
 	for i := 0; i < 10; i++ {
 		createdTournament := utils.CreateRandomTournament(ts.T(), ts.repo)
 		createdTournaments = append(createdTournaments, createdTournament)

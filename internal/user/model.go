@@ -1,21 +1,6 @@
 package user
 
-import (
-	"time"
-
-	"github.com/Hazem-BenAbdelhafidh/Tournify/internal/tournament"
-)
-
-type User struct {
-	ID          uint                    `json:"id"`
-	Username    string                  `json:"username" `
-	Email       string                  `json:"email"`
-	Password    string                  `json:"-" `
-	Tournaments []tournament.Tournament `json:"tournaments" gorm:"foreignKey:CreatorId"`
-	CreatedAt   time.Time               `json:"createdAt"`
-	UpdatedAt   time.Time               `json:"updatedAt"`
-	DeleteAt    *time.Time              `json:"deletedAt"`
-}
+import "github.com/Hazem-BenAbdelhafidh/Tournify/entities"
 
 type CreateUser struct {
 	Username string `json:"username" binding:"required"`
@@ -34,8 +19,8 @@ type LoginUser struct {
 }
 
 type SignupResponse struct {
-	User  User   `json:"user"`
-	Token string `json:"token"`
+	User  entities.User `json:"user"`
+	Token string        `json:"token"`
 }
 
 type LoginResponse struct {

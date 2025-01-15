@@ -8,6 +8,7 @@ import (
 	"net/http"
 
 	"github.com/Hazem-BenAbdelhafidh/Tournify/api"
+	"github.com/Hazem-BenAbdelhafidh/Tournify/entities"
 	"github.com/Hazem-BenAbdelhafidh/Tournify/internal/user"
 	"github.com/Hazem-BenAbdelhafidh/Tournify/utils"
 )
@@ -140,7 +141,7 @@ func (hs *HandlerSuite) TestMyInfo() {
 	hs.Require().NoError(err)
 	hs.Require().Equal(http.StatusOK, response.StatusCode)
 
-	var user user.User
+	var user entities.User
 	body, err := io.ReadAll(response.Body)
 	hs.Require().NoError(err)
 	err = json.Unmarshal(body, &user)
@@ -159,7 +160,7 @@ func (hs *HandlerSuite) TestGetUsers() {
 	hs.Require().NoError(err)
 	hs.Require().Equal(http.StatusOK, response.StatusCode)
 
-	var users []user.User
+	var users []entities.User
 	err = json.NewDecoder(response.Body).Decode(&users)
 	hs.Require().NoError(err)
 	hs.Require().Len(users, 10)
@@ -173,7 +174,7 @@ func (hs *HandlerSuite) TestGetUserById() {
 	hs.Require().NoError(err)
 	hs.Require().Equal(http.StatusOK, response.StatusCode)
 
-	var user user.User
+	var user entities.User
 	err = json.NewDecoder(response.Body).Decode(&user)
 	hs.Require().NoError(err)
 	hs.Require().Equal(createdUser.ID, user.ID)

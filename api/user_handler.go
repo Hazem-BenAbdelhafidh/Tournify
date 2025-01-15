@@ -26,7 +26,7 @@ func NewUserHandler(us *user.UserService) *UserHandler {
 // @Description This endpoint is used to get a single user by id
 // @Param id path int true "User ID"
 // @Produce application/json
-// @Success 200 {object} user.User{}
+// @Success 200 {object} entities.User{}
 // @Tags user
 // @Router /user/{id} [get]
 func (uh *UserHandler) GetUserById(c *gin.Context) {
@@ -54,7 +54,7 @@ func (uh *UserHandler) GetUserById(c *gin.Context) {
 // @Param limit query int false "Limit"
 // @Param offset query int false "Offset"
 // @Param search query string false "Search"
-// @Success 200 {array} user.User{}
+// @Success 200 {array} entities.User{}
 // @Tags user
 // @Router /user [get]
 func (uh *UserHandler) GetUsers(c *gin.Context) {
@@ -209,7 +209,7 @@ func (uh *UserHandler) DeleteUser(c *gin.Context) {
 // @Summary	gets the user info
 // @Description This endpoint is used to get the current logged in user info
 // @Produce application/json
-// @Success 200 {object} user.User{}
+// @Success 200 {object} entities.User{}
 // @Tags user
 // @Router /user/me [get]
 func (uh *UserHandler) GetMyInfo(c *gin.Context) {

@@ -6,6 +6,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/Hazem-BenAbdelhafidh/Tournify/entities"
 	"github.com/Hazem-BenAbdelhafidh/Tournify/internal/tournament"
 	"github.com/Hazem-BenAbdelhafidh/Tournify/internal/user"
 	"github.com/stretchr/testify/require"
@@ -30,7 +31,7 @@ func RandomNumber(upperBound int) int {
 	return randomNumber
 }
 
-func CreateRandomTournament(t *testing.T, repo *tournament.TournamentRepo) tournament.Tournament {
+func CreateRandomTournament(t *testing.T, repo *tournament.TournamentRepo) entities.Tournament {
 	name := RandomString(7)
 	description := RandomString(15)
 	game := RandomString(5)
@@ -59,7 +60,7 @@ func CreateRandomTournament(t *testing.T, repo *tournament.TournamentRepo) tourn
 
 }
 
-func CreateRandomUser(t *testing.T, repo *user.UserRepo) user.User {
+func CreateRandomUser(t *testing.T, repo *user.UserRepo) entities.User {
 	username := RandomString(7)
 	email := RandomString(15)
 	password := RandomString(9)

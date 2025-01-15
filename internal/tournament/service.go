@@ -1,11 +1,13 @@
 package tournament
 
+import "github.com/Hazem-BenAbdelhafidh/Tournify/entities"
+
 type ITournamentService interface {
-	CreateTournament(payload CreateTournament) (Tournament, error)
+	CreateTournament(payload CreateTournament) (entities.Tournament, error)
 	UpdateTournament(id int, payload CreateTournament) error
 	DeleteTournament(id int) error
-	GetTournamentById(id int) (Tournament, error)
-	GetTournaments(limit, offset int) ([]Tournament, error)
+	GetTournamentById(id int) (entities.Tournament, error)
+	GetTournaments(limit, offset int) ([]entities.Tournament, error)
 }
 
 type TournamentService struct {
@@ -18,15 +20,15 @@ func NewTournamentService(repo ITournamentRepository) *TournamentService {
 	}
 }
 
-func (ts *TournamentService) CreateTournament(payload CreateTournament) (Tournament, error) {
+func (ts *TournamentService) CreateTournament(payload CreateTournament) (entities.Tournament, error) {
 	return ts.repo.CreateTournament(payload)
 }
 
-func (ts *TournamentService) GetTournamentById(id int) (Tournament, error) {
+func (ts *TournamentService) GetTournamentById(id int) (entities.Tournament, error) {
 	return ts.repo.GetTournamentById(id)
 }
 
-func (ts *TournamentService) GetTournaments(limit, offset int) ([]Tournament, error) {
+func (ts *TournamentService) GetTournaments(limit, offset int) ([]entities.Tournament, error) {
 	return ts.repo.GetTournaments(limit, offset)
 }
 

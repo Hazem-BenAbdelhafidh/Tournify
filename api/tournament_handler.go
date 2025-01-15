@@ -23,7 +23,7 @@ func NewTournamentHandler(ts *tournament.TournamentService) *TournamentHandler {
 // @Summary	Gets tournament by id
 // @Description This endpoint is used to get a single tournament by id
 // @Produce application/json
-// @Success 200 {object} ResponseBody{}
+// @Success 200 {object} entities.Tournament{}
 // @Param id path int true "id of a tournament"
 // @Tags tournament
 // @Router /tournament/{id} [get]
@@ -49,7 +49,7 @@ func (th *TournamentHandler) GetTournamentById(c *gin.Context) {
 // @Summary	Gets tournaments
 // @Description This endpoint is used to get tournaments with pagination
 // @Produce application/json
-// @Success 200 {object} ResponseBody{}
+// @Success 200 {array} entities.User{}
 // @Param limit query int false "Limit"
 // @Param offset query int false "offset"
 // @Tags tournament
@@ -83,7 +83,7 @@ func (th *TournamentHandler) GetTournaments(c *gin.Context) {
 // @Summary	Create tournament
 // @Description This endpoint is used to create a new tournament
 // @Produce application/json
-// @Success 201 {object} ResponseBody{}
+// @Success 201 {object} entities.Tournament{}
 // @Param CreatePayload body tournament.CreateTournament true "Tournament"
 // @Tags tournament
 // @Router /tournament [post]
@@ -116,7 +116,7 @@ func (th *TournamentHandler) CreateTournament(c *gin.Context) {
 // @Summary	Update tournament
 // @Description This endpoint is used to update a tournament
 // @Produce application/json
-// @Success 200 {object} ResponseBody{}
+// @Success 200
 // @Param id path int true "id of a tournament"
 // @Param UpdateTournament body tournament.CreateTournament true "Update Tournament Payload"
 // @Tags tournament
@@ -149,7 +149,7 @@ func (th *TournamentHandler) UpdateTournament(c *gin.Context) {
 // @Summary	Deletes tournament
 // @Description This endpoint is used to delete a tournament
 // @Produce application/json
-// @Success 200 {object} ResponseBody{}
+// @Success 200
 // @Param id path int true "id of a tournament"
 // @Tags tournament
 // @Router /tournament/{id} [delete]

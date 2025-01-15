@@ -4,6 +4,7 @@ import (
 	"errors"
 	"os"
 
+	"github.com/Hazem-BenAbdelhafidh/Tournify/entities"
 	"github.com/golang-jwt/jwt"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -13,8 +14,8 @@ type IUserService interface {
 	Signup(payload CreateUser) (SignupResponse, error)
 	DeleteUser(id int) error
 	UpdateUser(id int, payload UpdateUser) error
-	GetUserById(id int) (User, error)
-	GetUsers(limit, offset int, searchWord string) ([]User, error)
+	GetUserById(id int) (entities.User, error)
+	GetUsers(limit, offset int, searchWord string) ([]entities.User, error)
 }
 
 type UserService struct {
@@ -106,11 +107,11 @@ func (us *UserService) Login(payload LoginUser) (string, error) {
 	return token, nil
 }
 
-func (us *UserService) GetUserById(id int) (User, error) {
+func (us *UserService) GetUserById(id int) (entities.User, error) {
 	return us.repo.GetUserById(id)
 }
 
-func (us *UserService) GetUsers(limit, offset int, searchWord string) ([]User, error) {
+func (us *UserService) GetUsers(limit, offset int, searchWord string) ([]entities.User, error) {
 	return us.repo.GetUsers(limit, offset, searchWord)
 }
 

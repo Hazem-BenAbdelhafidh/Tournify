@@ -1,15 +1,16 @@
 package tournament
 
 import (
+	"github.com/Hazem-BenAbdelhafidh/Tournify/entities"
 	"gorm.io/gorm"
 )
 
 type ITournamentRepository interface {
-	CreateTournament(payload CreateTournament) (Tournament, error)
+	CreateTournament(payload CreateTournament) (entities.Tournament, error)
 	UpdateTournament(id int, payload CreateTournament) error
 	DeleteTournament(id int) error
-	GetTournamentById(id int) (Tournament, error)
-	GetTournaments(limit, offset int) ([]Tournament, error)
+	GetTournamentById(id int) (entities.Tournament, error)
+	GetTournaments(limit, offset int) ([]entities.Tournament, error)
 }
 
 type TournamentRepo struct {
@@ -23,30 +24,30 @@ func NewTournamentRepo(DB *gorm.DB) *TournamentRepo {
 
 }
 
-func (tr TournamentRepo) GetTournamentById(id int) (Tournament, error) {
-	var tournament Tournament
+func (tr TournamentRepo) GetTournamentById(id int) (entities.Tournament, error) {
+	var tournament entities.Tournament
 
 	err := tr.DB.First(&tournament, id).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
-		return Tournament{}, err
+		return entities.Tournament{}, err
 	}
 
 	return tournament, nil
 }
 
-func (tr TournamentRepo) GetTournaments(limit, offset int) ([]Tournament, error) {
-	var tournaments []Tournament
+func (tr TournamentRepo) GetTournaments(limit, offset int) ([]entities.Tournament, error) {
+	var tournaments []entities.Tournament
 
 	err := tr.DB.Find(&tournaments).Limit(limit).Offset(offset).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
-		return []Tournament{}, err
+		return []entities.Tournament{}, err
 	}
 
 	return tournaments, nil
 }
 
-func (tr TournamentRepo) CreateTournament(payload CreateTournament) (Tournament, error) {
-	tournament := Tournament{
+func (tr TournamentRepo) CreateTournament(payload CreateTournament) (entities.Tournament, error) {
+	tournament := entities.Tournament{
 		Name:        payload.Name,
 		Description: payload.Description,
 		NumOfTeams:  payload.NumOfTeams,
@@ -58,14 +59,14 @@ func (tr TournamentRepo) CreateTournament(payload CreateTournament) (Tournament,
 
 	err := tr.DB.Create(&tournament).Error
 	if err != nil {
-		return Tournament{}, err
+		return entities.Tournament{}, err
 	}
 
 	return tournament, nil
 }
 
 func (tr TournamentRepo) UpdateTournament(id int, payload CreateTournament) error {
-	tournament := Tournament{
+	tournament := entities.Tournament{
 		ID:          uint(id),
 		Name:        payload.Name,
 		Description: payload.Description,
@@ -85,7 +86,7 @@ func (tr TournamentRepo) UpdateTournament(id int, payload CreateTournament) erro
 }
 
 func (tr TournamentRepo) DeleteTournament(id int) error {
-	err := tr.DB.Delete(&Tournament{}, id).Error
+	err := tr.DB.Delete(&entities.Tournament{}, id).Error
 	if err != nil {
 		return err
 	}

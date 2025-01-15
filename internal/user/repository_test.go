@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/Hazem-BenAbdelhafidh/Tournify/db"
+	"github.com/Hazem-BenAbdelhafidh/Tournify/entities"
 	"github.com/Hazem-BenAbdelhafidh/Tournify/internal/user"
 	"github.com/Hazem-BenAbdelhafidh/Tournify/utils"
 	"github.com/stretchr/testify/suite"
@@ -59,7 +60,7 @@ func (us *UserSuite) TestGetUserByEmail() {
 }
 
 func (us *UserSuite) TestGetUsers() {
-	createdUsers := []user.User{}
+	createdUsers := []entities.User{}
 	for i := 0; i < 10; i++ {
 		createdUser := utils.CreateRandomUser(us.T(), us.repo)
 		createdUsers = append(createdUsers, createdUser)
