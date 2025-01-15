@@ -1,8 +1,54 @@
 definitions:
-  api.ResponseBody:
+  entities.Tournament:
     properties:
-      data: {}
-      message:
+      createdAt:
+        type: string
+      creatorId:
+        type: integer
+      deletedAt:
+        type: string
+      description:
+        type: string
+      endDate:
+        type: string
+      game:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      numOfTeams:
+        type: integer
+      startDate:
+        type: string
+      updatedAt:
+        type: string
+      users:
+        items:
+          $ref: '#/definitions/entities.User'
+        type: array
+    type: object
+  entities.User:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      myTournaments:
+        items:
+          $ref: '#/definitions/entities.Tournament'
+        type: array
+      tournaments:
+        items:
+          $ref: '#/definitions/entities.Tournament'
+        type: array
+      updatedAt:
+        type: string
+      username:
         type: string
     type: object
   tournament.CreateTournament:
@@ -40,6 +86,11 @@ definitions:
     - password
     - username
     type: object
+  user.LoginResponse:
+    properties:
+      token:
+        type: string
+    type: object
   user.LoginUser:
     properties:
       email:
@@ -49,6 +100,13 @@ definitions:
     required:
     - email
     - password
+    type: object
+  user.SignupResponse:
+    properties:
+      token:
+        type: string
+      user:
+        $ref: '#/definitions/entities.User'
     type: object
   user.UpdateUser:
     properties:
@@ -79,7 +137,9 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/api.ResponseBody'
+            items:
+              $ref: '#/definitions/entities.User'
+            type: array
       summary: Gets tournaments
       tags:
       - tournament
@@ -98,7 +158,7 @@ paths:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/api.ResponseBody'
+            $ref: '#/definitions/entities.Tournament'
       summary: Create tournament
       tags:
       - tournament
@@ -116,8 +176,6 @@ paths:
       responses:
         "200":
           description: OK
-          schema:
-            $ref: '#/definitions/api.ResponseBody'
       summary: Deletes tournament
       tags:
       - tournament
@@ -135,7 +193,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/api.ResponseBody'
+            $ref: '#/definitions/entities.Tournament'
       summary: Gets tournament by id
       tags:
       - tournament
@@ -158,8 +216,6 @@ paths:
       responses:
         "200":
           description: OK
-          schema:
-            $ref: '#/definitions/api.ResponseBody'
       summary: Update tournament
       tags:
       - tournament
@@ -185,7 +241,9 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/api.ResponseBody'
+            items:
+              $ref: '#/definitions/entities.User'
+            type: array
       summary: gets users
       tags:
       - user
@@ -203,8 +261,6 @@ paths:
       responses:
         "200":
           description: OK
-          schema:
-            $ref: '#/definitions/api.ResponseBody'
       summary: delete user
       tags:
       - user
@@ -224,7 +280,7 @@ paths:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/api.ResponseBody'
+            $ref: '#/definitions/user.SignupResponse'
       summary: signup
       tags:
       - user
@@ -247,8 +303,6 @@ paths:
       responses:
         "200":
           description: OK
-          schema:
-            $ref: '#/definitions/api.ResponseBody'
       summary: update user
       tags:
       - user
@@ -269,7 +323,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/api.ResponseBody'
+            $ref: '#/definitions/user.LoginResponse'
       summary: Login to an existent account
       tags:
       - user
@@ -282,7 +336,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/api.ResponseBody'
+            $ref: '#/definitions/entities.User'
       summary: gets the user info
       tags:
       - user

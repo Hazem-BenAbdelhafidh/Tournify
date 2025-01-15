@@ -43,7 +43,10 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/api.ResponseBody"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/entities.User"
+                            }
                         }
                     }
                 }
@@ -72,7 +75,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/api.ResponseBody"
+                            "$ref": "#/definitions/entities.Tournament"
                         }
                     }
                 }
@@ -101,7 +104,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/api.ResponseBody"
+                            "$ref": "#/definitions/entities.Tournament"
                         }
                     }
                 }
@@ -126,10 +129,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/api.ResponseBody"
-                        }
+                        "description": "OK"
                     }
                 }
             },
@@ -162,10 +162,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/api.ResponseBody"
-                        }
+                        "description": "OK"
                     }
                 }
             }
@@ -204,7 +201,10 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/api.ResponseBody"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/entities.User"
+                            }
                         }
                     }
                 }
@@ -235,7 +235,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/api.ResponseBody"
+                            "$ref": "#/definitions/user.LoginResponse"
                         }
                     }
                 }
@@ -255,7 +255,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/api.ResponseBody"
+                            "$ref": "#/definitions/entities.User"
                         }
                     }
                 }
@@ -286,7 +286,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/api.ResponseBody"
+                            "$ref": "#/definitions/user.SignupResponse"
                         }
                     }
                 }
@@ -311,10 +311,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/api.ResponseBody"
-                        }
+                        "description": "OK"
                     }
                 }
             },
@@ -347,21 +344,88 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/api.ResponseBody"
-                        }
+                        "description": "OK"
                     }
                 }
             }
         }
     },
     "definitions": {
-        "api.ResponseBody": {
+        "entities.Tournament": {
             "type": "object",
             "properties": {
-                "data": {},
-                "message": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "creatorId": {
+                    "type": "integer"
+                },
+                "deletedAt": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "endDate": {
+                    "type": "string"
+                },
+                "game": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "numOfTeams": {
+                    "type": "integer"
+                },
+                "startDate": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "users": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/entities.User"
+                    }
+                }
+            }
+        },
+        "entities.User": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "myTournaments": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/entities.Tournament"
+                    }
+                },
+                "tournaments": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/entities.Tournament"
+                    }
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "username": {
                     "type": "string"
                 }
             }
@@ -416,6 +480,14 @@ const docTemplate = `{
                 }
             }
         },
+        "user.LoginResponse": {
+            "type": "object",
+            "properties": {
+                "token": {
+                    "type": "string"
+                }
+            }
+        },
         "user.LoginUser": {
             "type": "object",
             "required": [
@@ -428,6 +500,17 @@ const docTemplate = `{
                 },
                 "password": {
                     "type": "string"
+                }
+            }
+        },
+        "user.SignupResponse": {
+            "type": "object",
+            "properties": {
+                "token": {
+                    "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/entities.User"
                 }
             }
         },
