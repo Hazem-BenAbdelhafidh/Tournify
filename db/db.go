@@ -19,8 +19,6 @@ func ConnectToDb() *gorm.DB {
 		password = "test1234"
 		port = "5433"
 		database = "tournify_test"
-		fmt.Println(dbUser, password, port, database)
-
 		dsn = fmt.Sprintf("host=localhost user=%s password=%s dbname=%s port=%s sslmode=disable", dbUser, password, database, port)
 	} else {
 		dbUser = os.Getenv("DB_USERNAME")

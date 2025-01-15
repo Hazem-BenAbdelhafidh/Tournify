@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 
 	"github.com/Hazem-BenAbdelhafidh/Tournify/api"
@@ -26,6 +27,12 @@ func (hs *HandlerSuite) TestDecodeJwtToken() {
 	claims, err := api.DecodeJwtToken(userResp.Token)
 	hs.Require().NoError(err)
 	hs.Require().Contains(claims, "userId")
+}
+
+func (hs *HandlerSuite) addAuthorization(userId uint, req *http.Request) {
+	token, err := user.SignToken(userId)
+	hs.Require().NoError(err)
+	req.AddCookie(&http.Cookie{Name: "token", Value: token, HttpOnly: true, Path: "/", Domain: "localhost", Secure: false})
 }
 
 func signup(payload []byte, url string) (*http.Response, error) {
@@ -74,13 +81,10 @@ func (hs *HandlerSuite) TestSignup() {
 			}
 			hs.Require().True(tokenCookieExists)
 
-			rb := api.ResponseBody{}
-			err := rb.FromJson(response.Body)
+			var signupResponse user.SignupResponse
+			err = json.NewDecoder(response.Body).Decode(&signupResponse)
 			hs.Require().NoError(err)
-			hs.Require().Equal("success", rb.Message)
-			data, ok := rb.Data.(map[string]interface{})
-			hs.Require().True(ok)
-			hs.Require().NotEmpty(data["token"])
+			hs.Require().NotEmpty(signupResponse.Token)
 		}
 	}
 }
@@ -110,13 +114,10 @@ func (hs *HandlerSuite) TestLogin() {
 	}
 	hs.Require().True(tokenCookieExists)
 
-	rb := api.ResponseBody{}
-	err = rb.FromJson(response.Body)
+	var loginResponse user.LoginResponse
+	err = json.NewDecoder(response.Body).Decode(&loginResponse)
 	hs.Require().NoError(err)
-	hs.Require().Equal("success", rb.Message)
-	data, ok := rb.Data.(map[string]interface{})
-	hs.Require().True(ok)
-	hs.Require().NotEmpty(data["token"])
+	hs.Require().NotEmpty(loginResponse.Token)
 }
 
 func (hs *HandlerSuite) TestMyInfo() {
@@ -139,17 +140,11 @@ func (hs *HandlerSuite) TestMyInfo() {
 	hs.Require().NoError(err)
 	hs.Require().Equal(http.StatusOK, response.StatusCode)
 
-	rb := api.ResponseBody{}
-	err = rb.FromJson(response.Body)
-	hs.Require().NoError(err)
-	hs.Require().Equal("success", rb.Message)
 	var user user.User
-	data, err := json.Marshal(rb.Data)
+	body, err := io.ReadAll(response.Body)
 	hs.Require().NoError(err)
-	hs.Require().NotEmpty(data)
-	err = json.Unmarshal(data, &user)
+	err = json.Unmarshal(body, &user)
 	hs.Require().NoError(err)
-
 	hs.Require().Equal("hazem", user.Username)
 	hs.Require().Equal(TestEmail, user.Email)
 }
@@ -164,12 +159,10 @@ func (hs *HandlerSuite) TestGetUsers() {
 	hs.Require().NoError(err)
 	hs.Require().Equal(http.StatusOK, response.StatusCode)
 
-	rb := api.ResponseBody{}
-	err = rb.FromJson(response.Body)
+	var users []user.User
+	err = json.NewDecoder(response.Body).Decode(&users)
 	hs.Require().NoError(err)
-	hs.Require().Equal("success", rb.Message)
-	data := rb.Data.([]interface{})
-	hs.Require().Len(data, 10)
+	hs.Require().Len(users, 10)
 }
 
 func (hs *HandlerSuite) TestGetUserById() {
@@ -180,15 +173,8 @@ func (hs *HandlerSuite) TestGetUserById() {
 	hs.Require().NoError(err)
 	hs.Require().Equal(http.StatusOK, response.StatusCode)
 
-	rb := api.ResponseBody{}
-	err = rb.FromJson(response.Body)
-	hs.Require().NoError(err)
-	hs.Require().Equal("success", rb.Message)
-	data, err := json.Marshal(rb.Data)
-	hs.Require().NoError(err)
-
 	var user user.User
-	err = json.Unmarshal(data, &user)
+	err = json.NewDecoder(response.Body).Decode(&user)
 	hs.Require().NoError(err)
 	hs.Require().Equal(createdUser.ID, user.ID)
 	hs.Require().Equal(createdUser.Username, user.Username)

@@ -42,7 +42,7 @@ func (th *TournamentHandler) GetTournamentById(c *gin.Context) {
 		return
 	}
 
-	respondWithJson(c, http.StatusOK, tournament)
+	c.JSON(http.StatusOK, tournament)
 }
 
 // GetTournaments	godoc
@@ -76,7 +76,7 @@ func (th *TournamentHandler) GetTournaments(c *gin.Context) {
 		return
 	}
 
-	respondWithJson(c, http.StatusOK, tournaments)
+	c.JSON(http.StatusOK, tournaments)
 }
 
 // CreaeteTournament	godoc
@@ -88,13 +88,20 @@ func (th *TournamentHandler) GetTournaments(c *gin.Context) {
 // @Tags tournament
 // @Router /tournament [post]
 func (th *TournamentHandler) CreateTournament(c *gin.Context) {
-	var tournamentToCreate tournament.CreateTournament
-
-	err := c.BindJSON(&tournamentToCreate)
+	userId, err := getUserId(c)
 	if err != nil {
 		respondWithError(c, http.StatusBadRequest, err)
 		return
 	}
+
+	var tournamentToCreate tournament.CreateTournament
+	err = c.ShouldBindJSON(&tournamentToCreate)
+	if err != nil {
+		respondWithError(c, http.StatusBadRequest, err)
+		return
+	}
+
+	tournamentToCreate.CreatorId = userId
 
 	createdTournament, err := th.TournamentService.CreateTournament(tournamentToCreate)
 	if err != nil {
@@ -102,7 +109,7 @@ func (th *TournamentHandler) CreateTournament(c *gin.Context) {
 		return
 	}
 
-	respondWithJson(c, http.StatusCreated, createdTournament)
+	c.JSON(http.StatusCreated, createdTournament)
 }
 
 // UpdateTournament	godoc
@@ -123,7 +130,7 @@ func (th *TournamentHandler) UpdateTournament(c *gin.Context) {
 		respondWithError(c, http.StatusBadRequest, err)
 		return
 	}
-	err = c.BindJSON(&updatePayload)
+	err = c.ShouldBindJSON(&updatePayload)
 	if err != nil {
 		respondWithError(c, http.StatusBadRequest, err)
 		return
@@ -135,7 +142,7 @@ func (th *TournamentHandler) UpdateTournament(c *gin.Context) {
 		return
 	}
 
-	respondWithJson(c, http.StatusOK, nil)
+	c.JSON(http.StatusOK, nil)
 }
 
 // DeleteTournament	godoc
@@ -161,5 +168,5 @@ func (th *TournamentHandler) DeleteTournament(c *gin.Context) {
 		return
 	}
 
-	respondWithJson(c, http.StatusOK, nil)
+	c.JSON(http.StatusOK, nil)
 }

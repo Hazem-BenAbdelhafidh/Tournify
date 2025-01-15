@@ -53,6 +53,7 @@ func (tr TournamentRepo) CreateTournament(payload CreateTournament) (Tournament,
 		Game:        payload.Game,
 		StartDate:   payload.StartDate,
 		EndDate:     payload.EndDate,
+		CreatorId:   uint(payload.CreatorId),
 	}
 
 	err := tr.DB.Create(&tournament).Error

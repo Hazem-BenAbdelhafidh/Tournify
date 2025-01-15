@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strconv"
 
+	"github.com/Hazem-BenAbdelhafidh/Tournify/internal/tournament"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
 )
@@ -54,4 +56,38 @@ func AuthMiddleware(c *gin.Context) {
 	}
 
 	c.Next()
+}
+
+func CreatorMiddleware(tournamentService *tournament.TournamentService) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		userId, err := getUserId(c)
+		if err != nil {
+			respondWithError(c, http.StatusUnauthorized, errors.New(UnauthorizedMessage))
+			return
+		}
+
+		tournamentId := c.Param("id")
+		intTournamentId, err := strconv.Atoi(tournamentId)
+		if err != nil {
+			respondWithError(c, http.StatusBadRequest, err)
+			return
+		}
+
+		fmt.Println("HAZEM 1")
+		tournament, err := tournamentService.GetTournamentById(intTournamentId)
+		if err != nil {
+			respondWithError(c, http.StatusNotFound, err)
+			return
+		}
+
+		fmt.Println("HAZEM 2")
+		if tournament.CreatorId != uint(userId) {
+			respondWithError(c, http.StatusUnauthorized, errors.New(UnauthorizedMessage))
+			return
+		}
+
+		fmt.Println("HAZEM 3")
+
+		c.Next()
+	}
 }

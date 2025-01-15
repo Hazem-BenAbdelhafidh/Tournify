@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"errors"
 	"io"
 
 	swaggerFiles "github.com/swaggo/files"
@@ -50,6 +51,7 @@ func SetupRouter() *gin.Engine {
 		tournamentRouter.GET("/:id", tournamentHandler.GetTournamentById)
 		tournamentRouter.Use(AuthMiddleware)
 		tournamentRouter.POST("/", tournamentHandler.CreateTournament)
+		tournamentRouter.Use(CreatorMiddleware(tournamentService))
 		tournamentRouter.DELETE("/:id", tournamentHandler.DeleteTournament)
 		tournamentRouter.PATCH("/:id", tournamentHandler.UpdateTournament)
 	}
@@ -67,28 +69,6 @@ func SetupRouter() *gin.Engine {
 	}
 
 	return router
-}
-
-type ResponseBody struct {
-	Message string `json:"message"`
-	Data    any    `json:"data"`
-}
-
-func respondWithJson(c *gin.Context, statusCode int, data any) {
-	respBody := ResponseBody{
-		Message: "success",
-		Data:    data,
-	}
-
-	c.JSON(statusCode, respBody)
-}
-
-func (rb *ResponseBody) ToJson(w io.Writer) error {
-	return json.NewEncoder(w).Encode(rb)
-}
-
-func (rb *ResponseBody) FromJson(r io.Reader) error {
-	return json.NewDecoder(r).Decode(rb)
 }
 
 type ErrorResponse struct {
@@ -111,4 +91,16 @@ func respondWithError(c *gin.Context, statusCode int, err error) {
 	}
 
 	c.JSON(statusCode, errorResp)
+}
+
+func getUserId(c *gin.Context) (int, error) {
+	userId, exists := c.Get("userId")
+	if !exists {
+		return 0, errors.New("No user id found")
+	}
+
+	floatUserId := userId.(float64)
+	intUserId := int(floatUserId)
+
+	return intUserId, nil
 }

@@ -27,7 +27,7 @@ func NewUserService(repo IUserRepository) *UserService {
 	}
 }
 
-func signToken(userId uint) (string, error) {
+func SignToken(userId uint) (string, error) {
 	claims := jwt.MapClaims{
 		"userId": userId,
 	}
@@ -70,7 +70,7 @@ func (us *UserService) Signup(payload CreateUser) (SignupResponse, error) {
 		return SignupResponse{}, err
 	}
 
-	token, err := signToken(user.ID)
+	token, err := SignToken(user.ID)
 	if err != nil {
 		return SignupResponse{}, err
 	}
@@ -98,7 +98,7 @@ func (us *UserService) Login(payload LoginUser) (string, error) {
 		return "", err
 	}
 
-	token, err := signToken(user.ID)
+	token, err := SignToken(user.ID)
 	if err != nil {
 		return "", err
 	}
